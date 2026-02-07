@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function LoginCard() {
@@ -7,20 +7,6 @@ export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    cardRef.current.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
-  };
-
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg)";
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,37 +16,28 @@ export default function LoginCard() {
       return;
     }
     setIsLoading(true);
-    // Simulate login
     await new Promise((r) => setTimeout(r, 2000));
     setIsLoading(false);
   };
 
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="glass-card w-full max-w-md px-8 py-10 sm:px-10 animate-fade-in"
-      style={{ transitionProperty: "transform", transitionDuration: "0.15s" }}
-    >
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-primary-foreground tracking-tight">
-          Welcome Back
-        </h1>
-        <p className="mt-2 text-sm text-primary-foreground/60">
-          Sign in to continue to your account
+    <div className="w-full max-w-sm rounded-lg border border-border bg-card p-8 shadow-sm">
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-semibold text-foreground">Sign In</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Welcome back. Enter your credentials to continue.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive animate-fade-in">
+          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
             {error}
           </div>
         )}
 
         <div className="space-y-1.5">
-          <label htmlFor="email" className="block text-xs font-medium text-primary-foreground/70 uppercase tracking-wider">
+          <label htmlFor="email" className="block text-sm font-medium text-foreground">
             Email
           </label>
           <input
@@ -68,13 +45,13 @@ export default function LoginCard() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="input-glow w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-primary-foreground placeholder:text-primary-foreground/30 outline-none focus:border-primary/50"
+            placeholder="you@company.com"
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="password" className="block text-xs font-medium text-primary-foreground/70 uppercase tracking-wider">
+          <label htmlFor="password" className="block text-sm font-medium text-foreground">
             Password
           </label>
           <div className="relative">
@@ -84,14 +61,14 @@ export default function LoginCard() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="input-glow w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 pr-12 text-sm text-primary-foreground placeholder:text-primary-foreground/30 outline-none focus:border-primary/50"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
@@ -99,11 +76,11 @@ export default function LoginCard() {
         <button
           type="submit"
           disabled={isLoading}
-          className="btn-glow w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-primary py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <Loader2 size={18} className="animate-spin-slow" />
+              <Loader2 size={16} className="animate-spin" />
               Signing in…
             </span>
           ) : (
@@ -112,11 +89,11 @@ export default function LoginCard() {
         </button>
       </form>
 
-      <div className="mt-6 flex items-center justify-between text-xs">
-        <a href="#" className="text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors">
+      <div className="mt-5 flex items-center justify-between text-xs">
+        <a href="#" className="text-primary hover:underline">
           Forgot Password?
         </a>
-        <a href="#" className="text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors">
+        <a href="#" className="text-primary hover:underline">
           Create Account
         </a>
       </div>
